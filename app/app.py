@@ -2,25 +2,43 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 
-class MyWindow(Gtk.Window):
+class AppWindow(Gtk.Window):
     def __init__(self):
-        Gtk.Window.__init__(self, title="My Window")
+        Gtk.Window.__init__(self, title="Task Tracker")
 
-        # Load the interface from the XML file
-        builder = Gtk.Builder()
-        builder.add_from_file("interface.glade")
+        main_builder = Gtk.Builder()
+        main_builder.add_from_file("interface.glade")
 
-        # Get the main window object
-        self.window = builder.get_object("main_window")
-        print(self.window)
-        # Connect the "destroy" event to the Gtk.main_quit() function
+        self.window = main_builder.get_object("main_window")
         self.window.connect("destroy", Gtk.main_quit)
-
-        # Show the main window
         self.window.show_all()
 
-# Create an instance of the MyWindow class
-win = MyWindow()
+        button = main_builder.get_object("Open")
+        button.connect("clicked", self.on_button_clicked)
 
-# Start the Gtk main loop
+        exit_button = main_builder.get_object("Exit")
+        exit_button.connect("clicked", self.on_exit_button_clicked)
+
+        self.is_window_open = False
+
+    def on_button_clicked(self, widget):
+        if not self.is_window_open:
+            second_builder = Gtk.Builder()
+            second_builder.add_from_file("interface.glade")
+            dialog_window = second_builder.get_object("time_window")
+            dialog_window.connect("destroy", self.on_dialog_window_closed)
+            dialog_window.show_all()
+            self.is_window_open = True
+
+    def on_dialog_window_closed(self, widget):
+        self.is_window_open = False
+
+    def on_exit_button_clicked(self, widget):
+        self.window.destroy()
+
+        
+    
+
+win = AppWindow()
+
 Gtk.main()
