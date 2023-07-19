@@ -1,0 +1,2 @@
+
+AMOUNT_CHAR_TO_SLICE: int = 15
