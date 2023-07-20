@@ -1,16 +1,17 @@
-import os
 import datetime
+import os
 import time
-from peewee import *
 
 from models import TimerObject, db
+from peewee import *
 
-def create_and_migrate() -> None:
-	"""Создание и миграции в БД."""
-	db.create_tables([TimerObject])
-	
-	
-def check_sql() -> None:
+
+def create_and_migrate():
+    """Создание и миграции в БД."""
+    db.create_tables([TimerObject])
+
+
+def check_sql():
     """
     Checking for the presence of a database.
     Проверка на наличие БД.

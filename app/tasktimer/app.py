@@ -1,12 +1,12 @@
-import pgi
 import datetime
-import time
-pgi.require_version('Gtk', '3.0')
-from pgi.repository import Gtk, GLib
-from peewee import *
 
-from utils import check_sql
+import pgi
 from models import TimerObject
+from peewee import *
+from pgi.repository import GLib, Gtk
+from utils import check_sql
+
+pgi.require_version('Gtk', '3.0')
 
 
 class AppWindow(Gtk.Window):
@@ -23,8 +23,18 @@ class AppWindow(Gtk.Window):
         self.window.connect("destroy", Gtk.main_quit)
         self.window.show_all()
 
+        text_main_window = main_builder.get_object("text_main_window")
+
         button = main_builder.get_object("Button1Open")
         button.connect("clicked", self.on_button_clicked_open)
+
+        button_select_from_bd = main_builder.get_object(
+            "Button1RefreshTheList"
+        )
+        button_select_from_bd.connect(
+            "clicked", self.on_button_clicked_select,
+            text_main_window
+        )
 
         exit_button = main_builder.get_object("Button1Exit")
         exit_button.connect("clicked", self.destroy_main_window)
@@ -41,7 +51,7 @@ class AppWindow(Gtk.Window):
         if not self.is_window_open:
             second_builder = Gtk.Builder()
             second_builder.add_from_file("../interface/interface.glade")
-            dialog_window = second_builder.get_object("time_window")
+            self.dialog_window = second_builder.get_object("time_window")
             timer_label = second_builder.get_object("GtkLabel2_timer_window")
             start_time_label = second_builder.get_object("GtkLabel2start_date")
             end_time_label = second_builder.get_object("GtkLabel2end_date")
@@ -57,13 +67,35 @@ class AppWindow(Gtk.Window):
             )
             enrty2_name = second_builder.get_object("GtkEntry_2_timer_window")
             text2_field = second_builder.get_object("Text2_timer_window")
-            button2stop_write = second_builder.get_object("Button2Stop/WriteDB")
+            button2stop_write = second_builder.get_object(
+                "Button2Stop/WriteDB"
+            )
             button2stop_write.connect(
                 "clicked", self.on_button_clicked_stop_wtite_db,
-                end_time_label, timer_label, start_time_label, enrty2_name, text2_field
+                end_time_label, timer_label, start_time_label,
+                enrty2_name, text2_field
             )
-            dialog_window.show_all()
+            button2exit = second_builder.get_object("Button2Exit")
+            button2exit.connect(
+                "clicked", self.on_button_clicked_exit_from_timewin
+            )
+            self.dialog_window.show_all()
             self.is_window_open = True
+
+    def on_button_clicked_select(self, widget, text_main_window):
+        timers = TimerObject.select().dicts()
+        result_lines = [
+            f"Task Name: {timer['task_name']}\n"
+            f"Start Date: {timer['start_date']}\n"
+            f"End Date: {timer['end_date']}\n"
+            f"Amount of Time: {timer['amount_of_time']}\n"
+            f"Task About: {timer['task_about']}\n"
+            "-----------------\n"
+            for timer in timers
+        ]
+        result_str = "".join(result_lines)
+        text_buffer = text_main_window.get_buffer()
+        text_buffer.set_text(result_str)
 
     def format_time(self, seconds):
         return str(datetime.timedelta(seconds=seconds))[:-7]
@@ -72,16 +104,27 @@ class AppWindow(Gtk.Window):
         if not self.is_paused:
             current_time = datetime.datetime.utcnow()
             elapsed_time = current_time - start_time
-            timer_label.set_text(self.format_time(elapsed_time.total_seconds()))
+            timer_label.set_text(
+                self.format_time(
+                    elapsed_time.total_seconds()
+                )
+            )
         return True
+
+    def on_button_clicked_exit_from_timewin(self, widget):
+        if self.timer_id:
+            GLib.source_remove(self.timer_id)
+        self.is_window_open = False
+        self.dialog_window.destroy()
 
     def on_button_clicked_pause(self, widget, timer_label):
         if self.is_paused:
             self.is_paused = False
-            self.start_time = (datetime.datetime.utcnow() -
-                               datetime.timedelta(
-                                seconds=self.pause_start_time
-                               ))
+            self.start_time = (
+                datetime.datetime.utcnow() - datetime.timedelta(
+                    seconds=self.pause_start_time
+                )
+            )
             self.timer_id = GLib.timeout_add_seconds(
                 1, self.update_time,
                 timer_label, self.start_time
@@ -94,8 +137,6 @@ class AppWindow(Gtk.Window):
             self.pause_start_time = int((
                 datetime.datetime.utcnow() - self.start_time
             ).total_seconds())
-
-
 
     def formatted_date_time(self, input_date):
         parsed_date = datetime.datetime.strptime(
@@ -137,7 +178,6 @@ class AppWindow(Gtk.Window):
         )
         obj_timer.save()
 
-
     def on_button_clicked_run(
         self, widget, timer_label, start_time_label
     ):
@@ -161,8 +201,6 @@ class AppWindow(Gtk.Window):
             GLib.source_remove(self.timer_id)
         self.window.destroy()
 
-        
-    
 
 win = AppWindow()
 
