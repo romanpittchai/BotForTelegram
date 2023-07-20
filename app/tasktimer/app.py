@@ -85,11 +85,12 @@ class AppWindow(Gtk.Window):
     def on_button_clicked_select(self, widget, text_main_window):
         timers = TimerObject.select().dicts()
         result_lines = [
-            f"Task Name: {timer['task_name']}\n"
-            f"Start Date: {timer['start_date']}\n"
-            f"End Date: {timer['end_date']}\n"
-            f"Amount of Time: {timer['amount_of_time']}\n"
-            f"Task About: {timer['task_about']}\n"
+            f"Номер записи: {timer['id']}\n"
+            f"Название: {timer['task_name']}\n"
+            f"Заметка: {timer['task_about']}\n"
+            f"Время начала: {timer['start_date']}\n"
+            f"Время конца: {timer['end_date']}\n"
+            f"Кол-во времени: {timer['amount_of_time']}\n"
             "-----------------\n"
             for timer in timers
         ]

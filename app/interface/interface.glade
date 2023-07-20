@@ -289,12 +289,21 @@
           </packing>
         </child>
         <child>
-          <object class="GtkTextView" id="Text2_timer_window">
-            <property name="name">Text2_timer_window</property>
+          <object class="GtkScrolledWindow" id="scroll_text_timer_window">
+            <property name="name">scroll_text_timer_window</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
-            <property name="tooltip-text" translatable="yes">Note</property>
-            <property name="wrap-mode">word-char</property>
+            <property name="shadow-type">in</property>
+            <child>
+              <object class="GtkTextView" id="Text2_timer_window">
+                <property name="name">Text2_timer_window</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">Note</property>
+                <property name="wrap-mode">word-char</property>
+                <property name="monospace">True</property>
+              </object>
+            </child>
           </object>
           <packing>
             <property name="expand">True</property>
