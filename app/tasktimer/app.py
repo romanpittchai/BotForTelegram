@@ -1,12 +1,16 @@
+#!/usr/bin/env python
+
 import datetime
+import sqlite3
 
 import pgi
+
+pgi.require_version('Gtk', '3.0')
 from models import TimerObject
+from openpyxl import Workbook
 from peewee import *
 from pgi.repository import GLib, Gtk
 from utils import check_sql
-
-pgi.require_version('Gtk', '3.0')
 
 
 class AppWindow(Gtk.Window):
@@ -38,6 +42,11 @@ class AppWindow(Gtk.Window):
 
         exit_button = main_builder.get_object("Button1Exit")
         exit_button.connect("clicked", self.destroy_main_window)
+
+        button_exel = main_builder.get_object("Button1_main_window_unload")
+        button_exel.connect(
+            "clicked", self.on_button_clicked_unload_to_exel
+        )
 
         self.is_window_open = False
         self.is_paused = False
@@ -82,15 +91,32 @@ class AppWindow(Gtk.Window):
             self.dialog_window.show_all()
             self.is_window_open = True
 
+    def on_button_clicked_unload_to_exel(self, widget):
+        conn = sqlite3.connect('TaskTimerDB.db')
+        cursor = conn.cursor()
+        cursor.execute(
+            'SELECT task_name,'
+            'amount_of_time,'
+            'start_date'
+            'FROM timerobject'
+        )
+        results = cursor.fetchall()
+        workbook = Workbook()
+        worksheet = workbook.active
+        for row in results:
+            worksheet.append(row)
+        workbook.save('worksheet.xlsx')
+        conn.close()
+
     def on_button_clicked_select(self, widget, text_main_window):
         timers = TimerObject.select().dicts()
         result_lines = [
-            f"Номер записи: {timer['id']}\n"
-            f"Название: {timer['task_name']}\n"
-            f"Заметка: {timer['task_about']}\n"
-            f"Время начала: {timer['start_date']}\n"
-            f"Время конца: {timer['end_date']}\n"
-            f"Кол-во времени: {timer['amount_of_time']}\n"
+            f"Entry number: {timer['id']}\n"
+            f"Task name: {timer['task_name']}\n"
+            f"Task about: {timer['task_about']}\n"
+            f"Start date: {timer['start_date']}\n"
+            f"End_date: {timer['end_date']}\n"
+            f"Amount of time: {timer['amount_of_time']}\n"
             "-----------------\n"
             for timer in timers
         ]
