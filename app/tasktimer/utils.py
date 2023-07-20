@@ -1,4 +1,6 @@
 import os
+import datetime
+import time
 from peewee import *
 
 from models import TimerObject, db
@@ -15,4 +17,3 @@ def check_sql() -> None:
     """
     if not os.path.exists("TaskTimerDB.db"):
         create_and_migrate()
-

@@ -2,5 +2,5 @@ run:
 	chmod +x taskjob.sh
 	./taskjob.sh
 	
-pipfr:
+fr:
 	pip freeze > requirements.txt

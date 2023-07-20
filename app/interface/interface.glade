@@ -5,8 +5,12 @@
   <object class="GtkWindow" id="main_window">
     <property name="name">main_window</property>
     <property name="can-focus">False</property>
+    <property name="tooltip-text" translatable="yes">Main window</property>
+    <property name="resizable">False</property>
+    <property name="window-position">center</property>
     <property name="default-width">300</property>
     <property name="default-height">500</property>
+    <property name="gravity">center</property>
     <property name="startup-id">task_timer</property>
     <child>
       <object class="GtkBox" id="GtkBox1main_window">
@@ -19,6 +23,7 @@
             <property name="name">text_main_window</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">List of timers</property>
             <property name="wrap-mode">word</property>
             <property name="left-margin">1</property>
             <property name="right-margin">1</property>
@@ -38,7 +43,7 @@
             <property name="name">ButtonBox1_main_window</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="spacing">120</property>
+            <property name="spacing">40</property>
             <property name="homogeneous">True</property>
             <property name="layout-style">center</property>
             <child>
@@ -48,6 +53,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Open timer object</property>
                 <signal name="clicked" handler="open_time_window" object="time_window" swapped="no"/>
               </object>
               <packing>
@@ -63,6 +69,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Refresh the list timers</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -77,6 +84,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Exit from main window</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -97,17 +105,19 @@
   <object class="GtkDialog" id="time_window">
     <property name="name">timer_window</property>
     <property name="can-focus">False</property>
-    <property name="tooltip-text" translatable="yes">Timer</property>
-    <property name="default-width">400</property>
+    <property name="tooltip-text" translatable="yes">This is timer object</property>
+    <property name="resizable">False</property>
+    <property name="window-position">center</property>
+    <property name="default-width">500</property>
     <property name="default-height">500</property>
     <property name="type-hint">dialog</property>
+    <property name="gravity">center</property>
     <signal name="close" handler="exit_timer_window" object="main_window" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="gtkBox2_timer_window">
         <property name="name">gtkBox2_timer_window</property>
         <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="ButtonBox2_timer_window">
             <property name="name">ButtonBox2_timer_window</property>
@@ -117,9 +127,11 @@
             <child>
               <object class="GtkButton" id="Button2Run">
                 <property name="label" translatable="yes">Run</property>
+                <property name="name">Button2Run</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Run timer</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -129,11 +141,12 @@
             </child>
             <child>
               <object class="GtkButton" id="Button2Pause">
-                <property name="label" translatable="yes">Pause</property>
+                <property name="label" translatable="yes">Pause/Continue</property>
                 <property name="name">Button2Pause</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Pause timer</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -148,6 +161,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Stop and write information about timer</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -162,6 +176,7 @@
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Exit timer</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -181,6 +196,7 @@
             <property name="name">GtkEntry_2_timer_window</property>
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">Name timer</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -189,11 +205,35 @@
           </packing>
         </child>
         <child>
+          <object class="GtkLabel" id="GtkLabel2start_date">
+            <property name="name">GtkLabel2start_date</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="tooltip-text" translatable="yes">Start date timer</property>
+            <property name="label" translatable="yes">Start Date</property>
+            <property name="justify">center</property>
+            <property name="ellipsize">middle</property>
+            <attributes>
+              <attribute name="weight" value="book"/>
+              <attribute name="variant" value="normal"/>
+              <attribute name="stretch" value="normal"/>
+              <attribute name="scale" value="1"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkLabel" id="GtkLabel2_timer_window">
             <property name="name">GtkLabel2_timer_window</property>
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="tooltip-text" translatable="yes">This is timer</property>
             <property name="label" translatable="yes">Timer</property>
+            <property name="justify">center</property>
             <property name="ellipsize">middle</property>
             <attributes>
               <attribute name="font-desc" value="Noto Serif Bold 20"/>
@@ -207,6 +247,42 @@
             <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="GtkLabel2end_date">
+            <property name="name">GtkLabel2end_date</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="tooltip-text" translatable="yes">End date timer</property>
+            <property name="label" translatable="yes">End Date</property>
+            <property name="justify">center</property>
+            <property name="ellipsize">middle</property>
+            <attributes>
+              <attribute name="weight" value="normal"/>
+              <attribute name="variant" value="normal"/>
+              <attribute name="stretch" value="normal"/>
+              <attribute name="scale" value="1"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkTextView" id="Text2_timer_window">
+            <property name="name">Text2_timer_window</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="tooltip-text" translatable="yes">Note</property>
+            <property name="wrap-mode">word-char</property>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">4</property>
           </packing>
         </child>
       </object>

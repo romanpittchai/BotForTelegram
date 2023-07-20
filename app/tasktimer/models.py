@@ -13,9 +13,10 @@ class BaseModel(Model):
 class TimerObject(BaseModel):
       """Модель для записи объекта таймера."""
 
-      task_name = CharField(max_length=70, blank=False)
-      created_date = DateTimeField(default=datetime.datetime.now, blank=False)
-      amount_of_time = IntegerField(blank=False)
+      task_name = CharField(max_length=70)
+      start_date = DateTimeField()
+      end_date = DateTimeField()
+      amount_of_time = CharField()
       task_about = TextField()
 
       def __str__(self) -> str:
