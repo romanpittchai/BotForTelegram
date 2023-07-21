@@ -1,19 +1,21 @@
 #!/usr/bin/env python
-
 import datetime
+import os
 import sqlite3
 
+import pandas as pd
 import pgi
 
 pgi.require_version('Gtk', '3.0')
 from models import TimerObject
-from openpyxl import Workbook
 from peewee import *
 from pgi.repository import GLib, Gtk
 from utils import check_sql
 
 
 class AppWindow(Gtk.Window):
+    """Класс приложения. Application class."""
+
     def __init__(self):
         Gtk.Window.__init__(self, title="Task Tracker")
 
@@ -56,6 +58,8 @@ class AppWindow(Gtk.Window):
         self.pause_start_time = None
 
     def on_button_clicked_open(self, widget):
+        """Открытие окна таймера. Opening the timer window."""
+
         check_sql()
         if not self.is_window_open:
             second_builder = Gtk.Builder()
@@ -80,7 +84,7 @@ class AppWindow(Gtk.Window):
                 "Button2Stop/WriteDB"
             )
             button2stop_write.connect(
-                "clicked", self.on_button_clicked_stop_wtite_db,
+                "clicked", self.on_button_clicked_stop_write_db,
                 end_time_label, timer_label, start_time_label,
                 enrty2_name, text2_field
             )
@@ -91,43 +95,85 @@ class AppWindow(Gtk.Window):
             self.dialog_window.show_all()
             self.is_window_open = True
 
-    def on_button_clicked_unload_to_exel(self, widget):
-        conn = sqlite3.connect('TaskTimerDB.db')
-        cursor = conn.cursor()
-        cursor.execute(
-            'SELECT task_name,'
-            'amount_of_time,'
-            'start_date'
-            'FROM timerobject'
+    def error_message_db(self, widget, message):
+        """
+        Вывод ошибки отсутствия БД.
+        Output of the database absence error.
+        """
+
+        error_db_builder = Gtk.Builder()
+        error_db_builder.add_from_file("../interface/interface.glade")
+        self.dialog_error_db_window = error_db_builder.get_object(
+            "Error_window"
         )
-        results = cursor.fetchall()
-        workbook = Workbook()
-        worksheet = workbook.active
-        for row in results:
-            worksheet.append(row)
-        workbook.save('worksheet.xlsx')
-        conn.close()
+        error_db_label = error_db_builder.get_object("Label3_error_window")
+        error_db_label.set_text(message)
+        error_db_button = error_db_builder.get_object("Button3_error_window")
+        error_db_button.connect(
+            "clicked", self.on_button_clicked_destroy_error_db_msg
+        )
+        self.dialog_error_db_window.show_all()
+
+    def on_button_clicked_destroy_error_db_msg(self, widget):
+        """Разрушение окна ошибки. The destruction of the error window."""
+
+        self.dialog_error_db_window.destroy()
+
+    def on_button_clicked_unload_to_exel(self, widget):
+        """Выгрузка данных в exel. Uploading data to exel."""
+
+        if os.path.exists("TaskTimerDB.db"):
+            conn = sqlite3.connect('TaskTimerDB.db')
+            cursor = conn.cursor()
+            cursor.execute(
+                'SELECT *'
+                'FROM timerobject'
+            )
+            results = cursor.fetchall()
+            column_names = [
+                description[0] for description in cursor.description
+            ]
+            dataframe = pd.DataFrame(
+                results, columns=column_names
+            )
+            dataframe.to_excel('worksheet.xlsx', index=False)
+            conn.close()
+        else:
+            message = 'There is no such file:\nTaskTimerDB.db'
+            self.error_message_db(widget, message)
 
     def on_button_clicked_select(self, widget, text_main_window):
-        timers = TimerObject.select().dicts()
-        result_lines = [
-            f"Entry number: {timer['id']}\n"
-            f"Task name: {timer['task_name']}\n"
-            f"Task about: {timer['task_about']}\n"
-            f"Start date: {timer['start_date']}\n"
-            f"End_date: {timer['end_date']}\n"
-            f"Amount of time: {timer['amount_of_time']}\n"
-            "-----------------\n"
-            for timer in timers
-        ]
-        result_str = "".join(result_lines)
-        text_buffer = text_main_window.get_buffer()
-        text_buffer.set_text(result_str)
+        """
+        Выборка данных и вывод в окно.
+        Data sampling and output to the window.
+        """
+
+        if os.path.exists("TaskTimerDB.db"):
+            timers = TimerObject.select().dicts()
+            result_lines = [
+                f"Entry number: {timer['id']}\n"
+                f"Task name: {timer['task_name']}\n"
+                f"Task about: {timer['task_about']}\n"
+                f"Start date: {timer['start_date']}\n"
+                f"End_date: {timer['end_date']}\n"
+                f"Amount of time: {timer['amount_of_time']}\n"
+                "-----------------\n"
+                for timer in timers
+            ]
+            result_str = "".join(result_lines)
+            text_buffer = text_main_window.get_buffer()
+            text_buffer.set_text(result_str)
+        else:
+            message = 'There is no such file:\nTaskTimerDB.db'
+            self.error_message_db(widget, message)
 
     def format_time(self, seconds):
+        """Форматирование даты. Formatting the date."""
+
         return str(datetime.timedelta(seconds=seconds))[:-7]
 
     def update_time(self, timer_label, start_time):
+        """Для таймера. For the timer."""
         if not self.is_paused:
             current_time = datetime.datetime.utcnow()
             elapsed_time = current_time - start_time
@@ -139,12 +185,16 @@ class AppWindow(Gtk.Window):
         return True
 
     def on_button_clicked_exit_from_timewin(self, widget):
+        """Разрушение окна с таймером. Destruction of the timer window."""
+
         if self.timer_id:
             GLib.source_remove(self.timer_id)
         self.is_window_open = False
         self.dialog_window.destroy()
 
     def on_button_clicked_pause(self, widget, timer_label):
+        """Пауза таймера. Timer pause."""
+
         if self.is_paused:
             self.is_paused = False
             self.start_time = (
@@ -166,16 +216,23 @@ class AppWindow(Gtk.Window):
             ).total_seconds())
 
     def formatted_date_time(self, input_date):
+        """
+        Форматирование даты. Вывод в виджет.
+        Formatting the date. Output to the widget.
+        """
+
         parsed_date = datetime.datetime.strptime(
             input_date, '%a, %d %b %Y\n%H:%M'
         )
         return parsed_date.strftime('%d/%m/%y %H:%M')
 
-    def on_button_clicked_stop_wtite_db(
+    def on_button_clicked_stop_write_db(
         self, widget, end_time_label,
         timer_label, start_time_label,
         enrty2_name, text2_field
     ):
+        """Остановка и запись в БД. Stop and write to the database."""
+
         end_time_label.set_text(
             datetime.datetime.now().strftime('%a, %d %b %Y\n%H:%M')
         )
@@ -208,6 +265,8 @@ class AppWindow(Gtk.Window):
     def on_button_clicked_run(
         self, widget, timer_label, start_time_label
     ):
+        """Запуск таймера. Start the timer."""
+
         self.is_paused = False
         self.pause_start_time = None
         start_time_label.set_text(
@@ -219,11 +278,15 @@ class AppWindow(Gtk.Window):
         )
 
     def on_dialog_window_closed(self, widget):
+        """Закрытие окна. Closing the window."""
+
         self.is_window_open = False
         if self.timer_id:
             GLib.source_remove(self.timer_id)
 
     def destroy_main_window(self, widget):
+        """Разрушение окна. The destruction of the window."""
+
         if self.timer_id:
             GLib.source_remove(self.timer_id)
         self.window.destroy()

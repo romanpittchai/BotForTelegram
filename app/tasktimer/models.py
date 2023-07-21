@@ -7,12 +7,17 @@ db = SqliteDatabase('TaskTimerDB.db')
 
 
 class BaseModel(Model):
+    """Базовая модель. The basic model."""
+
     class Meta:
         database = db
 
 
 class TimerObject(BaseModel):
-    """Модель для записи объекта таймера."""
+    """
+    Модель для записи объекта таймера.
+    A model for recording a timer object.
+    """
 
     task_name = CharField(max_length=70)
     start_date = DateTimeField()

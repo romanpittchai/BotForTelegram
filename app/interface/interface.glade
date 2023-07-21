@@ -2,6 +2,77 @@
 <!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.24"/>
+  <object class="GtkDialog" id="Error_window">
+    <property name="name">Error_window</property>
+    <property name="can-focus">False</property>
+    <property name="tooltip-text" translatable="yes">Error Window</property>
+    <property name="resizable">False</property>
+    <property name="window-position">center</property>
+    <property name="default-width">320</property>
+    <property name="default-height">260</property>
+    <property name="type-hint">dialog</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="box3_error_window">
+        <property name="name">box3_error_window</property>
+        <property name="can-focus">False</property>
+        <property name="tooltip-text" translatable="yes">Box for error window</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="ButtonBox3_error_window">
+            <property name="name">ButtonBox3_error_window</property>
+            <property name="can-focus">False</property>
+            <property name="tooltip-text" translatable="yes">Button box for error window</property>
+            <property name="homogeneous">True</property>
+            <property name="baseline-position">bottom</property>
+            <property name="layout-style">end</property>
+            <child>
+              <object class="GtkButton" id="Button3_error_window">
+                <property name="label" translatable="yes">OK</property>
+                <property name="name">Button3_error_window</property>
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Close window</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="Label3_error_window">
+            <property name="name">Label3_error_window</property>
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="tooltip-text" translatable="yes">Error message</property>
+            <property name="label" translatable="yes">Error message</property>
+            <attributes>
+              <attribute name="font-desc" value="Sans 14"/>
+              <attribute name="style" value="normal"/>
+              <attribute name="weight" value="book"/>
+              <attribute name="variant" value="normal"/>
+              <attribute name="stretch" value="normal"/>
+              <attribute name="scale" value="1"/>
+            </attributes>
+          </object>
+          <packing>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <object class="GtkWindow" id="main_window">
     <property name="name">main_window</property>
     <property name="can-focus">False</property>
@@ -92,13 +163,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="Button1Exit">
-                <property name="label" translatable="yes">Exit</property>
-                <property name="name">Button1Exit</property>
+              <object class="GtkButton" id="Button1_main_window_unload">
+                <property name="label" translatable="yes">Exel</property>
+                <property name="name">Button1_main_window_unload</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Exit from main window</property>
+                <property name="tooltip-text" translatable="yes">To exel</property>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -107,13 +178,13 @@
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="Button1_main_window_unload">
-                <property name="label" translatable="yes">Unload</property>
-                <property name="name">Button1_main_window_unload</property>
+              <object class="GtkButton" id="Button1Exit">
+                <property name="label" translatable="yes">Exit</property>
+                <property name="name">Button1Exit</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">To exel</property>
+                <property name="tooltip-text" translatable="yes">Exit from main window</property>
               </object>
               <packing>
                 <property name="expand">True</property>
