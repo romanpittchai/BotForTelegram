@@ -155,7 +155,7 @@ class AppWindow(Gtk.Window):
                 f"Task name: {timer['task_name']}\n"
                 f"Task about: {timer['task_about']}\n"
                 f"Start date: {timer['start_date']}\n"
-                f"End_date: {timer['end_date']}\n"
+                f"End date: {timer['end_date']}\n"
                 f"Amount of time: {timer['amount_of_time']}\n"
                 "-----------------\n"
                 for timer in timers
