@@ -64,6 +64,8 @@ Task-Tracker использует следующие зависимости:
     GTK+3 - для графического интерфейса приложения.
     Остальные зависимости можно увидеть в файле requirements.txt
 
+Как примечание: _Для работы GTK используется библиотека pgi. Но так же можно использовать gi. Как правило, в среде ОС Linux, программа работает без проблем, на яблочных же ОС может потребоваться донастройка и доустановка через brew библиотек и пакеов для работы с GTK. Для ОС Windows установка соответствующих dll._
+
 ### Лицензия
 
 Трекер заданий распространяется под лицензией MIT. 
@@ -136,6 +138,7 @@ Task-Tracker uses the following dependencies:
      GTK+3 - for the graphical interface of the application.
      Other dependencies can be seen in the requirements.txt file
 
+As a note: _ For GTK, the pgi library is used. But you can also use gi. As a rule, in a Linux OS environment, the program works without problems, on Apple OS, you may need to configure and install additional libraries and packages through brew to work with GTK. For Windows OS, install the appropriate dll._
 ### License
 
 Task-Tracker is distributed under the MIT license.
