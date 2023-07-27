@@ -72,9 +72,9 @@
             <property name="spacing">15</property>
             <property name="homogeneous">True</property>
             <child>
-              <object class="GtkCheckButton" id="Check_button2">
+              <object class="GtkCheckButton" id="Check_button5">
                 <property name="label" translatable="yes">The task about</property>
-                <property name="name">Check_button2</property>
+                <property name="name">Check_button5</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
@@ -90,7 +90,7 @@
             <child>
               <object class="GtkCheckButton" id="Check_button1">
                 <property name="label" translatable="yes">The task name</property>
-                <property name="name">Check_button</property>
+                <property name="name">Check_button1</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
@@ -104,9 +104,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="Check_button3">
+              <object class="GtkCheckButton" id="Check_button2">
                 <property name="label" translatable="yes">Start date</property>
-                <property name="name">Check_button3</property>
+                <property name="name">Check_button2</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
@@ -120,9 +120,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="Check_button4">
+              <object class="GtkCheckButton" id="Check_button3">
                 <property name="label" translatable="yes">End date</property>
-                <property name="name">Check_button4</property>
+                <property name="name">Check_button3</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
@@ -136,9 +136,9 @@
               </packing>
             </child>
             <child>
-              <object class="GtkCheckButton" id="Check_button5">
+              <object class="GtkCheckButton" id="Check_button4">
                 <property name="label" translatable="yes">Amount of time</property>
-                <property name="name">Check_button5</property>
+                <property name="name">Check_button4</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
@@ -423,6 +423,24 @@
             <property name="expand">False</property>
             <property name="fill">True</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCheckButton" id="maim_window_checkbutton">
+            <property name="label" translatable="yes">check the fields for exel</property>
+            <property name="name">maim_window_checkbutton</property>
+            <property name="visible">True</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">False</property>
+            <property name="tooltip-text" translatable="yes">The checkbutton for unload to exel</property>
+            <property name="margin-start">3</property>
+            <property name="margin-top">3</property>
+            <property name="draw-indicator">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

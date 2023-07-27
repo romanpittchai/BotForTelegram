@@ -7,7 +7,7 @@ import pandas as pd
 import pgi
 
 pgi.require_version('Gtk', '3.0')
-from models import TimerObject, CheckBoxTable
+from models import TimerObject, CheckBoxTable, db
 from peewee import *
 from pgi.repository import GLib, Gtk
 from utils import check_sql
@@ -143,6 +143,23 @@ class AppWindow(Gtk.Window):
 
         self.dialog_error_db_window.destroy()
 
+    def dialog_checkbutton_window_destroy_exit(self, widget):
+        """ """
+
+        self.dialog_checkbutton_window.destroy()
+        
+    def dialog_checkbutton_window_destroy(self):
+        """ """
+
+        self.dialog_checkbutton_window.destroy()
+        self.exel()
+
+    def on_checkbutton_event(self, widget, event):
+        """ """
+
+        self.dialog_checkbutton_window.destroy()
+        return True
+
     def on_button_clicked_check_button(self, widget):
         """ """
 
@@ -151,22 +168,15 @@ class AppWindow(Gtk.Window):
         self.value_check_button3 = self.check_button3.get_active()
         self.value_check_button4 = self.check_button4.get_active()
         self.value_check_button5 = self.check_button5.get_active()
-        #self.value_check_buttons = (
-        #    self.value_check_button1,
-        #    self.value_check_button2,
-        #    self.value_check_button3,
-        #    self.value_check_button4,
-        #    self.value_check_button5,
-        #)
+
         obj_checkbox = CheckBoxTable.get(id=1)
-        obj_checkbox = CheckBoxTable(
-                task_name=self.value_check_button1,
-                start_date=self.value_check_button3,
-                end_date=self.value_check_button4, 
-                amount_of_time=self.value_check_button5,
-                task_about=self.value_check_button2
-            )
+        obj_checkbox.task_name=self.value_check_button1
+        obj_checkbox.start_date=self.value_check_button2
+        obj_checkbox.end_date=self.value_check_button3
+        obj_checkbox.amount_of_time=self.value_check_button4
+        obj_checkbox.task_about=self.value_check_button5
         obj_checkbox.save()
+        self.dialog_checkbutton_window_destroy()
 
     def checkbutton_db_window(self):
         """ """
@@ -176,27 +186,23 @@ class AppWindow(Gtk.Window):
         self.dialog_checkbutton_window = checkbutton_builder.get_object(
             "CheckBox_window"
         )
+        self.dialog_checkbutton_window.connect("delete-event", self.on_checkbutton_event)
         self.dialog_checkbutton_window.connect("delete-event", self.on_checkbutton_delete_event)
         self.check_button1 = checkbutton_builder.get_object(
             "Check_button1"
         )
-        #self.value_check_button1 = self.check_button1.get_active()
         self.check_button2 = checkbutton_builder.get_object(
             "Check_button2"
         )
-        #self.value_check_button2 = self.check_button2.get_active()
         self.check_button3 = checkbutton_builder.get_object(
             "Check_button3"
         )
-        #self.value_check_button3 = self.check_button3.get_active()
         self.check_button4 = checkbutton_builder.get_object(
             "Check_button4"
         )
-        #self.value_check_button4 = self.check_button4.get_active()
         self.check_button5 = checkbutton_builder.get_object(
             "Check_button5"
         )
-        #self.value_check_button5 = self.check_button5.get_active()
         self.value_check_button = (
             self.check_button1,
             self.check_button2,
@@ -210,7 +216,8 @@ class AppWindow(Gtk.Window):
             cursor = conn.cursor()
             cursor.execute(
                 f'SELECT {columns_checkbox} '
-                'FROM checkboxtable'
+                'FROM checkboxtable '
+                'WHERE id=1'
             )
 
             results = cursor.fetchall()
@@ -222,6 +229,10 @@ class AppWindow(Gtk.Window):
             button_check_box.connect(
                 "clicked", self.on_button_clicked_check_button,
             )
+            button_check_box_exit = checkbutton_builder.get_object("Button_window3_Exit")
+            button_check_box_exit.connect(
+                "clicked", self.dialog_checkbutton_window_destroy_exit,
+            )
 
         self.dialog_checkbutton_window.show_all()
 
@@ -230,28 +241,47 @@ class AppWindow(Gtk.Window):
 
         self.dialog_checkbutton_window.destroy()
         return True
+    
+    def exel(self):
+        """ """
+
+        list_columns = []
+        columns = ', '.join(self.list_of_column)
+        conn = sqlite3.connect('TaskTimerDB.db')
+        cursor = conn.cursor()
+        cursor.execute(
+            f'SELECT {columns} '
+            'FROM checkboxtable '
+            'WHERE id=1'
+        )
+        results = cursor.fetchall()
+        for key, value in enumerate(results[0]):
+            if value == 1:
+                list_columns.append(self.list_of_column[key])
+        join_list_columns = ', '.join(list_columns)
+
+        conn = sqlite3.connect('TaskTimerDB.db')
+        cursor = conn.cursor()
+        cursor.execute(
+            f'SELECT {join_list_columns} '
+            'FROM timerobject'
+        )
+        results = cursor.fetchall()
+        column_names = [
+            description[0] for description in cursor.description
+        ]
+        dataframe = pd.DataFrame(
+            results, columns=column_names
+        )
+        dataframe.to_excel('worksheet.xlsx', index=False)
+        conn.close()
 
     def on_button_clicked_unload_to_exel(self, widget):
         """Выгрузка данных в exel. Uploading data to exel."""
 
-        self.checkbutton_db_window()
+        
         if os.path.exists("TaskTimerDB.db"):
-
-            conn = sqlite3.connect('TaskTimerDB.db')
-            cursor = conn.cursor()
-            cursor.execute(
-                'SELECT *'
-                'FROM timerobject'
-            )
-            results = cursor.fetchall()
-            column_names = [
-                description[0] for description in cursor.description
-            ]
-            dataframe = pd.DataFrame(
-                results, columns=column_names
-            )
-            dataframe.to_excel('worksheet.xlsx', index=False)
-            conn.close()
+            self.checkbutton_db_window()
         else:
             message = 'There is no such file:\nTaskTimerDB.db'
             self.error_message_db(widget, message)

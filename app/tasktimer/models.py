@@ -17,11 +17,22 @@ class TimerObject(BaseModel):
     A model for recording a timer object.
     """
 
-    task_name = CharField(max_length=70)
-    start_date = DateTimeField()
-    end_date = DateTimeField()
-    amount_of_time = CharField()
-    task_about = TextField()
+    task_name = CharField(
+        max_length=70,
+        help_text="Name of the task",
+    )
+    start_date = DateTimeField(
+        help_text="Initial time",
+    )
+    end_date = DateTimeField(
+        help_text="End time",
+    )
+    amount_of_time = CharField(
+        help_text="Amount of time",
+    )
+    task_about = TextField(
+        help_text="Notes",
+    )
 
     def __str__(self) -> str:
         """Для вывода строкового представления."""
@@ -35,13 +46,26 @@ class TimerObject(BaseModel):
     
 
 class CheckBoxTable(BaseModel):
-    """ """
+    """
+    Модель для чекбоксов.
+    Model for checkboxes.
+    """
 
-    task_name = BooleanField()
-    start_date = BooleanField()
-    end_date = BooleanField()
-    amount_of_time = BooleanField()
-    task_about = BooleanField()
+    task_name = BooleanField(
+        help_text="Name of the task",
+    )
+    start_date = BooleanField(
+        help_text="Initial time",
+    )
+    end_date = BooleanField(
+        help_text="End time",
+    )
+    amount_of_time = BooleanField(
+        help_text="Amount of time",
+    )
+    task_about = BooleanField(
+        help_text="Notes",
+    )
 
     def __str__(self) -> str:
         """Для вывода строкового представления."""
