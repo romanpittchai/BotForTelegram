@@ -1,14 +1,15 @@
-import datetime
 import os
-import time
 
-from models import TimerObject, db
+from models import TimerObject, CheckBoxTable, db
 from peewee import *
 
+MODELS_TUPLE = (TimerObject, CheckBoxTable)
 
 def create_and_migrate():
     """Создание и миграции в БД."""
-    db.create_tables([TimerObject])
+
+    for obj in MODELS_TUPLE:
+        db.create_tables([obj])
 
 
 def check_sql():
@@ -16,5 +17,6 @@ def check_sql():
     Checking for the presence of a database.
     Проверка на наличие БД.
     """
+
     if not os.path.exists("TaskTimerDB.db"):
         create_and_migrate()

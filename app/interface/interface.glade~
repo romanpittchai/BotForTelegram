@@ -39,7 +39,7 @@
             </child>
             <child>
               <object class="GtkButton" id="Button_window3_Exit">
-                <property name="label" translatable="yes">Exit</property>
+                <property name="label" translatable="yes">button</property>
                 <property name="name">Button_window3_Exit</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
@@ -69,7 +69,7 @@
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="orientation">vertical</property>
-            <property name="spacing">15</property>
+            <property name="spacing">18</property>
             <property name="homogeneous">True</property>
             <child>
               <object class="GtkCheckButton" id="Check_button2">
