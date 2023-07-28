@@ -2,6 +2,7 @@
 import datetime
 import os
 import sqlite3
+from typing import Any, Tuple, Union
 
 import pandas as pd
 import pgi
@@ -19,7 +20,7 @@ from utils import check_sql
 class AppWindow(Gtk.Window):
     """Класс приложения. Application class."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         Gtk.Window.__init__(self, title="Task Tracker")
 
         main_builder = Gtk.Builder()
@@ -69,7 +70,7 @@ class AppWindow(Gtk.Window):
         else:
             self.checkbox_main.set_active(False)
 
-        def error_message_db(self, message_error_db):
+        def error_message_db(self, message_error_db: str) -> None:
             """
             Ошибка отсутствия БД.
             Database absence error.
@@ -94,8 +95,8 @@ class AppWindow(Gtk.Window):
             self.dialog_error_db_window.show_all()
 
         def on_button_clicked_destroy_error_db_msg(
-                self, dialog_error_db_window
-        ):
+                self, dialog_error_db_window: Gtk.Dialog
+        ) -> None:
             """
             Разрушение окна.
             The destruction of the window.
@@ -103,7 +104,7 @@ class AppWindow(Gtk.Window):
 
             dialog_error_db_window.destroy()
 
-        def on_checkbutton_main(self, checkbox_main):
+        def on_checkbutton_main(self, checkbox_main: Gtk.CheckButton) -> None:
             """Обработка чекбаттона. Checkbutton processing."""
 
             if os.path.exists("TaskTimerDB.db"):
@@ -119,14 +120,14 @@ class AppWindow(Gtk.Window):
             "toggled", on_checkbutton_main, self.checkbox_main
         )
 
-        self.is_window_open = False
-        self.is_paused = False
-        self.start_time = None
-        self.timer_id = None
-        self.seconds_elapsed = 0
-        self.pause_start_time = None
+        self.is_window_open: bool = False
+        self.is_paused: bool = False
+        self.start_time: None = None
+        self.timer_id: None = None
+        self.seconds_elapsed: int = 0
+        self.pause_start_time: None = None
 
-        self.list_of_column = (
+        self.list_of_column: Tuple[str, ...] = (
             "task_name",
             "start_date",
             "end_date",
@@ -134,7 +135,7 @@ class AppWindow(Gtk.Window):
             "task_about"
         )
 
-    def on_button_clicked_open(self, widget):
+    def on_button_clicked_open(self, widget: Gtk.Widget) -> None:
         """Открытие окна таймера. Opening the timer window."""
 
         check_sql()
@@ -173,10 +174,12 @@ class AppWindow(Gtk.Window):
             button2exit.connect(
                 "clicked", self.on_button_clicked_exit_from_timewin
             )
-            self.is_window_open = True
+            self.is_window_open: bool = True
             self.dialog_window.show_all()
 
-    def error_message_fields(self, widget, message_error):
+    def error_message_fields(
+            self, widget: Gtk.Widget, message_error: str
+    ) -> None:
         error_db_builder2 = Gtk.Builder()
         error_db_builder2.add_from_file("../interface/interface.glade")
         self.dialog_error_fields_window = error_db_builder2.get_object(
@@ -190,7 +193,9 @@ class AppWindow(Gtk.Window):
         )
         self.dialog_error_fields_window.show_all()
 
-    def error_message_db(self, widget, message_error_db):
+    def error_message_db(
+            self, widget: Gtk.Widget, message_error_db: str
+    ) -> None:
         """
         Вывод ошибки отсутствия БД.
         Output of the database absence error.
@@ -209,7 +214,9 @@ class AppWindow(Gtk.Window):
         )
         self.dialog_error_db_window.show_all()
 
-    def on_button_clicked_destroy_error_db_msg(self, widget):
+    def on_button_clicked_destroy_error_db_msg(
+            self, widget: Gtk.Widget
+    ) -> None:
         """
         Разрушение окна ошибки.
         The destruction of the error window.
@@ -217,7 +224,9 @@ class AppWindow(Gtk.Window):
 
         self.dialog_error_db_window.destroy()
 
-    def dialog_checkbutton_window_destroy_exit(self, widget):
+    def dialog_checkbutton_window_destroy_exit(
+            self, widget: Gtk.Widget
+    ) -> None:
         """
         Разрушение окна кнопкой Exit.
         Destroying the window with the Exit button.
@@ -225,7 +234,7 @@ class AppWindow(Gtk.Window):
 
         self.dialog_checkbutton_window.destroy()
 
-    def dialog_checkbutton_window_destroy(self):
+    def dialog_checkbutton_window_destroy(self) -> None:
         """
         Разрушение окна с чебаттонами.
         Запуск функции exel.
@@ -236,7 +245,7 @@ class AppWindow(Gtk.Window):
         self.dialog_checkbutton_window.destroy()
         self.exel()
 
-    def on_checkbutton_event(self, widget, event):
+    def on_checkbutton_event(self, widget: Gtk.Widget, event) -> bool:
         """
         Разрушение окна через крестик.
         The destruction of the window through the cross.
@@ -245,7 +254,7 @@ class AppWindow(Gtk.Window):
         self.dialog_checkbutton_window.destroy()
         return True
 
-    def on_button_clicked_check_button(self, widget):
+    def on_button_clicked_check_button(self, widget: Gtk.Widget) -> None:
         """
         Обработка выбора чекбаттонов.
         Processing the selection of checkbuttons.
@@ -266,7 +275,7 @@ class AppWindow(Gtk.Window):
         obj_checkbox.save()
         self.dialog_checkbutton_window_destroy()
 
-    def checkbutton_db_window(self):
+    def checkbutton_db_window(self) -> None:
         """
         Обработка значений чекбаттновов в БД.
         Processing the values of checkbuttons in the database.
@@ -299,7 +308,7 @@ class AppWindow(Gtk.Window):
         self.check_button5 = checkbutton_builder.get_object(
             "Check_button5"
         )
-        self.value_check_button = (
+        self.value_check_button: Tuple[Gtk.CheckButton, ...] = (
             self.check_button1,
             self.check_button2,
             self.check_button3,
@@ -336,7 +345,9 @@ class AppWindow(Gtk.Window):
 
         self.dialog_checkbutton_window.show_all()
 
-    def on_checkbutton_delete_event(self, widget, event):
+    def on_checkbutton_delete_event(
+            self, widget: Gtk.Widget, event
+    ) -> bool:
         """
         Разрушение окна через крестик.
         The destruction of the window through the cross.
@@ -345,7 +356,7 @@ class AppWindow(Gtk.Window):
         self.dialog_checkbutton_window.destroy()
         return True
 
-    def exel(self):
+    def exel(self) -> None:
         """
         Обработка выгрузки exel-файла.
         Processing of the excel file upload.
@@ -382,7 +393,7 @@ class AppWindow(Gtk.Window):
         dataframe.to_excel('worksheet.xlsx', index=False)
         conn.close()
 
-    def on_button_clicked_unload_to_exel(self, widget):
+    def on_button_clicked_unload_to_exel(self, widget: Gtk.Widget) -> None:
         """Выгрузка данных в exel. Uploading data to exel."""
 
         if os.path.exists("TaskTimerDB.db"):
@@ -403,7 +414,9 @@ class AppWindow(Gtk.Window):
         else:
             self.error_message_db(widget, message_error_db)
 
-    def on_button_clicked_select(self, widget, text_main_window):
+    def on_button_clicked_select(
+            self, widget: Gtk.Widget, text_main_window: str
+    ) -> None:
         """
         Выборка данных и вывод в окно.
         Data sampling and output to the window.
@@ -427,12 +440,14 @@ class AppWindow(Gtk.Window):
         else:
             self.error_message_db(widget, message_error_db)
 
-    def format_time(self, seconds):
+    def format_time(self, seconds: int) -> str:
         """Форматирование даты. Formatting the date."""
 
         return str(datetime.timedelta(seconds=seconds))[:-7]
 
-    def update_time(self, timer_label, start_time):
+    def update_time(
+            self, timer_label: Gtk.Label, start_time: datetime.datetime
+    ) -> bool:
         """Для таймера. For the timer."""
 
         if not self.is_paused:
@@ -445,18 +460,20 @@ class AppWindow(Gtk.Window):
             )
         return True
 
-    def destroy_timer(self):
+    def destroy_timer(self) -> None:
         """
         Обработка разрушения таймера.
         Processing the destruction of the timer.
         """
 
-        self.timer_id = None
-        self.is_paused = False
-        self.start_time = None
-        self.pause_start_time = 0
+        self.timer_id: None = None
+        self.is_paused: bool = False
+        self.start_time: None = None
+        self.pause_start_time: int = 0
 
-    def on_time_window_delete_event(self, widget, event):
+    def on_time_window_delete_event(
+            self, widget: Gtk.Widget, event
+    ) -> bool:
         """
         Обработка разрушения окна с таймером
         через крестик.
@@ -464,25 +481,27 @@ class AppWindow(Gtk.Window):
         through the cross.
         """
 
-        self.is_window_open = False
+        self.is_window_open: bool = False
         self.dialog_window.destroy()
         self.destroy_timer()
         return True
 
-    def on_button_clicked_exit_from_timewin(self, widget):
+    def on_button_clicked_exit_from_timewin(self, widget: Gtk.Widget) -> None:
         """Разрушение окна с таймером. Destruction of the timer window."""
 
         if self.timer_id:
             GLib.source_remove(self.timer_id)
-        self.is_window_open = False
+        self.is_window_open: bool = False
         self.destroy_timer()
         self.dialog_window.destroy()
 
-    def on_button_clicked_pause(self, widget, timer_label):
+    def on_button_clicked_pause(
+            self, widget: Gtk.Widget, timer_label: Gtk.Label
+    ) -> None:
         """Пауза таймера. Timer pause."""
 
         if self.is_paused:
-            self.is_paused = False
+            self.is_paused: bool = False
             self.start_time = (
                 datetime.datetime.utcnow() - datetime.timedelta(
                     seconds=self.pause_start_time
@@ -496,15 +515,17 @@ class AppWindow(Gtk.Window):
             if not self.timer_id:
                 self.error_message_fields(widget, message_error_timer)
             else:
-                self.is_paused = True
+                self.is_paused: bool = True
                 if self.timer_id:
                     GLib.source_remove(self.timer_id)
-                self.timer_id = None
-                self.pause_start_time = int((
+                self.timer_id: None = None
+                self.pause_start_time: int = int((
                     datetime.datetime.utcnow() - self.start_time
                 ).total_seconds())
 
-    def formatted_date_time(self, input_date):
+    def formatted_date_time(
+            self, input_date: Union[str, datetime.datetime]
+    ) -> str:
         """
         Форматирование даты. Вывод в виджет.
         Formatting the date. Output to the widget.
@@ -516,10 +537,10 @@ class AppWindow(Gtk.Window):
         return parsed_date.strftime('%d/%m/%y %H:%M:%S')
 
     def on_button_clicked_stop_write_db(
-        self, widget, end_time_label,
-        timer_label, start_time_label,
-        enrty2_name, text2_field
-    ):
+        self, widget: Gtk.Widget, end_time_label: Gtk.Label,
+        timer_label: Gtk.Label, start_time_label: Gtk.Label,
+        enrty2_name: Any, text2_field: Any
+    ) -> None:
         """Остановка и запись в БД. Stop and write to the database."""
 
         if self.timer_id or (self.is_paused and not self.timer_id):
@@ -558,13 +579,18 @@ class AppWindow(Gtk.Window):
         else:
             self.error_message_fields(widget, message_error_timer)
 
-    def on_button_clicked_destroy_error_fields_msg(self, widget):
+    def on_button_clicked_destroy_error_fields_msg(
+            self, widget: Gtk.Widget
+    ) -> None:
+        """ Разрушение окна. Destroy the window."""
+
         self.dialog_error_fields_window.destroy()
 
     def on_button_clicked_run(
-        self, widget, timer_label, start_time_label,
-        enrty2_name, text2_field
-    ):
+        self, widget: Gtk.Widget, timer_label: Gtk.Label,
+        start_time_label: Gtk.Label,
+        enrty2_name: Any, text2_field: Any
+    ) -> None:
         """Запуск таймера. Start the timer."""
 
         name_entry = enrty2_name.get_text()
@@ -576,8 +602,8 @@ class AppWindow(Gtk.Window):
         if name_entry == "" or text_note == "":
             self.error_message_fields(widget, message_error_fields)
         else:
-            self.is_paused = False
-            self.pause_start_time = None
+            self.is_paused: bool = False
+            self.pause_start_time: None = None
             start_time_label.set_text(
                 datetime.datetime.now().strftime('%a, %d %b %Y\n%H:%M:%S')
             )
@@ -586,7 +612,7 @@ class AppWindow(Gtk.Window):
                 1, self.update_time, timer_label, self.start_time
             )
 
-    def destroy_main_window(self, widget):
+    def destroy_main_window(self, widget: Gtk.Widget) -> None:
         """Разрушение окна. The destruction of the window."""
 
         if self.timer_id:
