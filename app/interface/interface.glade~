@@ -426,7 +426,7 @@
           </packing>
         </child>
         <child>
-          <object class="GtkCheckButton" id="maim_window_checkbutton">
+          <object class="GtkCheckButton" id="main_window_checkbutton">
             <property name="label" translatable="yes">check the fields for exel</property>
             <property name="name">maim_window_checkbutton</property>
             <property name="visible">True</property>

@@ -1,5 +1,6 @@
-from constants import AMOUNT_CHAR_TO_SLICE
 from peewee import *
+
+from constants import AMOUNT_CHAR_TO_SLICE
 
 db = SqliteDatabase('TaskTimerDB.db')
 
@@ -35,7 +36,10 @@ class TimerObject(BaseModel):
     )
 
     def __str__(self) -> str:
-        """Для вывода строкового представления."""
+        """
+        Для вывода строкового представления.
+        To output a string representation.
+        """
 
         return (
             f'Объект {self.task_name[:AMOUNT_CHAR_TO_SLICE]}, '
@@ -43,7 +47,7 @@ class TimerObject(BaseModel):
             f'{self.amount_of_time[:AMOUNT_CHAR_TO_SLICE]}'
             f'дата {self.create_date[:AMOUNT_CHAR_TO_SLICE]}'
         )
-    
+
 
 class CheckBoxTable(BaseModel):
     """
@@ -68,7 +72,10 @@ class CheckBoxTable(BaseModel):
     )
 
     def __str__(self) -> str:
-        """Для вывода строкового представления."""
+        """
+        Для вывода строкового представления.
+        To output a string representation.
+        """
 
         return (
             f'task_name - {self.task_name}, '
@@ -78,3 +85,23 @@ class CheckBoxTable(BaseModel):
             f'task_about - {self.task_about}.'
         )
 
+
+class MainCheckBoxTable(BaseModel):
+    """
+    Модель для чекбокса на главном окне.
+    The model for the checkbox on the main window.
+    """
+
+    checkbox = BooleanField(
+        help_text="Main checkbox",
+    )
+
+    def __str__(self) -> str:
+        """
+        Для вывода строкового представления.
+        To output a string representation.
+        """
+
+        return (
+            f'checkbox - {self.checkbox}.'
+        )
