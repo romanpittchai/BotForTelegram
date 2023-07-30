@@ -620,6 +620,6 @@ class AppWindow(Gtk.Window):
         self.window.destroy()
 
 
-win = AppWindow()
-
-Gtk.main()
+if __name__ == '__main__':
+    win = AppWindow()
+    Gtk.main()
